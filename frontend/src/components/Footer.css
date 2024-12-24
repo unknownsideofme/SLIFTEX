@@ -1,0 +1,143 @@
+.footer { 
+    background-color: #01959a;
+    color: black;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
+    margin-top: 40px; /* Added margin-top for spacing from above */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-container div {
+    flex: 1;
+    margin: 0 10px;
+}
+
+h1 {
+    color: #222;
+    font-size: 2.5rem; /* Increased font size for product name */
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 20px; /* Added left margin for spacing from container edge */
+    margin-bottom: 10px; /* Adds some space below the h1 */
+    text-align: left; /* Aligns the text to the left */
+}
+
+/* Styling for Quick Links and Follow Us sections */
+.quick-links h3,
+.follow-us h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.quick-links ul,
+.follow-us ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Adjusted follow us section for icons */
+.follow-us ul {
+    display: flex; /* Align items horizontally */
+    justify-content: center; /* Center-align the icons */
+    gap: 20px; /* Spacing between icons */
+}
+
+.follow-us ul li {
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
+/* Styling for social media icons */
+.follow-us ul li a {
+    color: white;
+    font-size: 1.5rem; /* Adjust icon size */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.quick-links ul li a {
+    color: black;
+    text-decoration: none;
+   
+}
+
+.follow-us ul li a:hover {
+    color: black; /* Change color on hover */
+}
+.quick-links ul li a:hover{
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    font-size: 0.9em;
+}
+
+/* Media Query for Tablets and Smaller Screens */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column; /* Stack the sections vertically */
+        align-items: center; /* Center-align the content */
+        padding: 0 10px; /* Reduce padding */
+    }
+
+    h1 {
+        font-size: 2rem; /* Smaller font size on tablets */
+        margin-left: 0; /* Remove left margin */
+        text-align: center; /* Center-align the heading */
+    }
+
+    .footer-container div {
+        margin: 10px 0; /* Add vertical margin to each div */
+    }
+
+    .quick-links ul li,
+    .follow-us ul li {
+        margin-bottom: 8px; /* Increased margin for better readability */
+    }
+
+    .footer-bottom {
+        font-size: 0.8em; /* Smaller footer text */
+    }
+
+    /* Adjusting icon size on tablets */
+    .follow-us ul li a {
+        font-size: 2rem; /* Increase size of icons on tablets */
+    }
+}
+
+/* Media Query for Small Mobile Screens */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem; /* Further reduce font size on mobile */
+    }
+
+    .quick-links h3,
+    .follow-us h3 {
+        font-size: 1.1rem; /* Slightly smaller heading for links */
+    }
+
+    .footer-bottom {
+        font-size: 0.75em; /* Further reduce footer text size */
+    }
+
+    .footer-container {
+        padding: 0 10px; /* Reduced padding for very small screens */
+    }
+
+    /* Adjusting icon size on mobile */
+    .follow-us ul li a {
+        font-size: 1.8rem; /* Adjust size on smaller mobile screens */
+    }
+}
+

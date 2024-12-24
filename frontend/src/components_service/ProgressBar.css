@@ -1,0 +1,74 @@
+/* Centering the container with the progress bars */
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh; /* Centers vertically */
+    width: 100%; /* Takes full width */
+    flex-direction: column; /* Stack elements vertically */
+    margin: 0; /* Ensure no margin around the container */
+}
+
+/* Indicator for progress bars (e.g., percentage) */
+.indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #01959a;
+}
+
+.indicator .name {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Custom Progress bar wrapper */
+.react-customizable-progressbar {
+    position: relative;
+    display: inline-block;
+    margin: 0px 0; /* Reduce the upper and lower margin */
+    transition: stroke-dasharray 0.5s ease-in-out; /* Smooth transition for progress change */
+    max-width: 300px; /* Limit width for consistency */
+    width: 100%;
+}
+
+/* Track styling (the background) */
+.react-customizable-progressbar .track {
+    stroke: #e0e0e0; /* Light grey for track */
+    stroke-width: 10; /* Add stroke width to make track more visible */
+    opacity: 0.5; /* Slight transparency for background track */
+}
+
+/* Actual progress bar (custom color and width) */
+.react-customizable-progressbar .progress {
+    stroke: #01959a; /* Custom color for progress */
+    stroke-width: 10; /* Matching width of track */
+    transition: stroke-dasharray 0.5s ease-in-out; /* Smooth transition when updating progress */
+}
+
+/* Styling the surrounding container for better visibility */
+.triangle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0; /* Remove space between progress bars */
+    margin: 0; /* Remove margin around the container */
+    padding: 0; /* Ensure no extra padding */
+}
+
+/* Wrapping progress bar inside individual wrappers */
+.progress-bar-wrapper {
+    flex: 1;
+    max-width: 300px; /* Set a max-width for individual progress bars */
+    width: 100%; /* Ensure full width within the container */
+    margin: 5px 0; /* Reduce the upper and lower margin */
+    padding: 0; /* Remove any internal padding */
+}
