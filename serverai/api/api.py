@@ -33,7 +33,7 @@ os.environ["LANGCHAIN_PROJECT"] = "SLIFTEX"
 
 
 #llm
-llm = ChatGroq(api_key=api_key, model=" ")
+llm = ChatGroq(api_key=api_key, model="llama-3.3-70b-versatile")
 
 # Embed the query
 embed_model = OllamaEmbeddings(model="llama3.2")

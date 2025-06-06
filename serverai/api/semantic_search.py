@@ -17,7 +17,7 @@ pinecone_key = os.getenv("PINECONE_API_KEY")
 # Initialize Pinecone
 pc = Pinecone(api_key=pinecone_key)
 
-index_semantic = "llama"
+index_semantic = "sliftex"
 indexsemantic = pc.Index(index_semantic)
 
 #embed the query

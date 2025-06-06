@@ -23,7 +23,7 @@ let cache = async function getApiData(title) {
 
   console.log('Fetching new data from API');
   try {
-    const response = await fetch(`http://98.70.48.163/sliftex/similarity`, {
+    const response = await fetch(`http://localhost:8000/sliftex/similarity`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -171,7 +171,7 @@ const DynamicTable = () => {
   };
 
   const sendTitleToUpdateAPI = (title) => {
-    Axios.post(`http://98.70.48.163/sliftex/update`, 
+    Axios.post(`http://localhost:8000/sliftex/update`, 
       { title: title }, 
       { headers: { 'Content-Type': 'application/json' } }
     )
