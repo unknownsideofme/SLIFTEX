@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Table.css';
 import Axios from 'axios';
 import Progress from './ProgressBar';
+import { URL_FETCH,URL_POST,CACHE_EXPIRATION_TIME } from '../constant.js';
 
-const CACHE_EXPIRATION_TIME = 120000; // 120 seconds
+ // 120 seconds
 
 let cache = async function getApiData(title) {
   const cacheKey = `title_cache_${encodeURIComponent(title)}`;
@@ -23,7 +24,7 @@ let cache = async function getApiData(title) {
 
   console.log('Fetching new data from API');
   try {
-    const response = await fetch(`http://localhost:8000/sliftex/similarity`, {
+    const response = await fetch(URL_FETCH, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -171,7 +172,7 @@ const DynamicTable = () => {
   };
 
   const sendTitleToUpdateAPI = (title) => {
-    Axios.post(`http://localhost:8000/sliftex/update`, 
+    Axios.post(URL_POST, 
       { title: title }, 
       { headers: { 'Content-Type': 'application/json' } }
     )
