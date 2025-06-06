@@ -1,12 +1,12 @@
 import axios from 'axios';
-
+import { URL_LOGIN } from '../constant';
 const siginUserCall = async (obj) => {
     console.log("fn called");
   try {
     
     const {email, password , rememberMe} = obj;
 
-    const response = await axios.post('http://localhost:5000/api/signin', {
+    const response = await axios.post(URL_LOGIN, {
     email,
     password,
     rememberMe

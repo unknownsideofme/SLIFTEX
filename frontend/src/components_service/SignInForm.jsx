@@ -6,6 +6,7 @@ import { updateSignInAction  , resetSignInAction} from '../features/SignIn';
 import {useNavigate} from 'react-router-dom'
 import siginUserCall from '../api_utils/Signin'; 
 import axios from 'axios';
+import { URL_VERIFY } from '../constant.js';
 
 const SignInForm = () => {
   const navigate = useNavigate() ;
@@ -16,7 +17,7 @@ const SignInForm = () => {
     if(token){
       try{
         const verify = async () => {
-          const res = await axios.post('http://localhost:5000/api/jwt-auth' , {token}) ;
+          const res = await axios.post(URL_VERIFY , {token}) ;
           console.log(res.data) ;
           if(res.data.success) {
             navigate('/service' , {replace:true}) ; 
