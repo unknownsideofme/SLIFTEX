@@ -1,257 +1,436 @@
-/* Centering the container with the progress bars */
-.item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40vh; /* Centers vertically */
-    width: 100%; /* Takes full width */
-    flex-direction: column; /* Stack elements vertically */
-    margin: 0; /* Ensure no margin around the container */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid #e5e7eb;
+/* PRGI Government Portal Theme CSS */
+body {
+  background: linear-gradient(135deg, #4a90e2 0%, #2c5aa0 50%, #1e3a8a 100%);
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Arial', 'Helvetica', sans-serif;
 }
 
-/* Indicator for progress bars (e.g., percentage) */
-.indicator {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 20px;
-    font-weight: 700;
-    color: #2c5aa0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    letter-spacing: 0.5px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  color: #333333;
+  backdrop-filter: blur(10px);
+  position: relative;
 }
 
-.indicator .name {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #374151;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    text-align: center;
+.container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  height: 4px;
+  background: linear-gradient(90deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+  border-radius: 12px 12px 0 0;
 }
 
-/* Custom Progress bar wrapper */
-.react-customizable-progressbar {
-    position: relative;
-    display: inline-block;
-    margin: 8px 0; /* Consistent spacing */
-    transition: all 0.5s ease-in-out; /* Smooth transition for progress change */
-    max-width: 320px; /* Increased for better visibility */
-    width: 100%;
-    filter: drop-shadow(0 4px 8px rgba(74, 144, 226, 0.2));
+/* Header Section */
+.header-section {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
 }
 
-.react-customizable-progressbar:hover {
-    transform: scale(1.02);
-    filter: drop-shadow(0 6px 12px rgba(74, 144, 226, 0.3));
-    transition: all 0.3s ease;
+.dashboard-title {
+  font-size: 28px;
+  color: #2c5aa0;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-/* Track styling (the background) */
-.react-customizable-progressbar .track {
-    stroke: #e5e7eb; /* Modern light grey for track */
-    stroke-width: 12; /* Slightly thicker for better visibility */
-    opacity: 0.6; /* Subtle transparency for background track */
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+.dashboard-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
 }
 
-/* Actual progress bar (custom color and width) */
-.react-customizable-progressbar .progress {
-    stroke: url(#progressGradient); /* Use gradient instead of solid color */
-    stroke-width: 12; /* Matching width of track */
-    stroke-linecap: round; /* Rounded ends for modern look */
-    transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing transition */
-    filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.3));
+/* Control Section */
+.control-section {
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-/* Add gradient definition for progress bars */
-.react-customizable-progressbar svg defs linearGradient,
-.react-customizable-progressbar svg linearGradient {
-    stop:first-child {
-        stop-color: #4a90e2;
-        stop-opacity: 1;
-    }
-    stop:last-child {
-        stop-color: #2c5aa0;
-        stop-opacity: 1;
-    }
+.refresh-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4a90e2 0%, #2c5aa0 100%);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
-/* Styling the surrounding container for better visibility */
-.triangle-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin: 0;
-    padding: 24px;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
-    margin-bottom: 24px;
-    position: relative;
+.refresh-btn:hover {
+  background: linear-gradient(135deg, #5ba0f2 0%, #3d6bb0 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
 }
 
-/* Government Portal Header Accent */
-.triangle-container::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    height: 4px;
-    background: linear-gradient(90deg, #ff9933 0%, #ffffff 50%, #138808 100%);
-    border-radius: 8px 8px 0 0;
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
-/* Wrapping progress bar inside individual wrappers */
-.progress-bar-wrapper {
-    flex: 1;
-    max-width: 320px; /* Increased max-width for better presentation */
-    width: 100%; /* Ensure full width within the container */
-    margin: 12px 0; /* Better vertical spacing */
-    padding: 16px; /* Add internal padding for better spacing */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
-    border-radius: 8px;
-    border: 1px solid rgba(229, 231, 235, 0.5);
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
+/* Progress Grid */
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
 }
 
-.progress-bar-wrapper:hover {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.95) 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
-    border-color: rgba(74, 144, 226, 0.3);
+.progress-item {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-/* Progress bar title styling */
-.progress-bar-wrapper .progress-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c5aa0;
-    margin-bottom: 8px;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.progress-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* Progress bar subtitle styling */
-.progress-bar-wrapper .progress-subtitle {
-    font-size: 12px;
-    color: #6b7280;
-    margin-top: 8px;
-    text-align: center;
-    font-weight: 500;
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
-/* Responsive design for progress bars */
-@media (max-width: 768px) {
-    .triangle-container {
-        flex-direction: column;
-        padding: 16px;
-        gap: 16px;
-    }
-    
-    .progress-bar-wrapper {
-        max-width: 100%;
-        margin: 8px 0;
-        padding: 12px;
-    }
-    
-    .react-customizable-progressbar {
-        max-width: 280px;
-    }
-    
-    .indicator {
-        font-size: 18px;
-    }
-    
-    .indicator .name {
-        font-size: 12px;
-    }
+.progress-title {
+  font-size: 18px;
+  color: #2c5aa0;
+  font-weight: 600;
+  margin: 0;
 }
 
-@media (max-width: 480px) {
-    .item {
-        height: 35vh;
-        margin: 8px;
-        border-radius: 8px;
-    }
-    
-    .react-customizable-progressbar {
-        max-width: 240px;
-    }
-    
-    .triangle-container {
-        padding: 12px;
-        margin-bottom: 16px;
-    }
-    
-    .progress-bar-wrapper {
-        padding: 8px;
-    }
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
-/* Animation for progress bars when they load */
-@keyframes progressLoad {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.status-indicator.active {
+  background: #10b981;
 }
 
-.react-customizable-progressbar {
-    animation: progressLoad 0.6s ease-out;
+.status-indicator.pending {
+  background: #f59e0b;
 }
 
-/* Professional loading state */
-.progress-bar-wrapper.loading {
-    opacity: 0.7;
+.status-indicator.inactive {
+  background: #ef4444;
 }
 
-.progress-bar-wrapper.loading .react-customizable-progressbar {
-    animation: governmentPulse 2s infinite;
+.speedometer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Summary Section */
+.summary-section {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.summary-section h3 {
+  font-size: 20px;
+  color: #2c5aa0;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #4a90e2;
+  padding-bottom: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid #4a90e2;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.2);
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c5aa0;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Loading Animation */
+.spinner {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 500;
+  animation: governmentPulse 2s infinite;
+}
+
+.loading-text {
+  padding: 20px;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-radius: 8px;
+  border: 2px solid #4a90e2;
+  display: inline-block;
 }
 
 @keyframes governmentPulse {
-    0% { 
-        opacity: 1; 
-        filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.3));
-    }
-    50% { 
-        opacity: 0.6; 
-        filter: drop-shadow(0 4px 8px rgba(74, 144, 226, 0.5));
-    }
-    100% { 
-        opacity: 1; 
-        filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.3));
-    }
+  0% { 
+    opacity: 1; 
+    color: #2c5aa0;
+  }
+  50% { 
+    opacity: 0.6; 
+    color: #4a90e2;
+  }
+  100% { 
+    opacity: 1; 
+    color: #2c5aa0;
+  }
 }
 
-/* Focus accessibility for progress bars */
-.react-customizable-progressbar:focus-within {
-    outline: 2px solid #4a90e2;
-    outline-offset: 2px;
-    border-radius: 4px;
+/* Form Styles (from your original theme) */
+form {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  gap: 18px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+form div {
+  margin-bottom: 8px;
+}
+
+form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2c5aa0;
+  font-size: 15px;
+}
+
+form input[type="text"] {
+  width: 97.5%;
+  height: 40px;
+  padding: 10px 14px;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #ffffff;
+  color: #333333;
+  transition: all 0.3s ease;
+}
+
+form input[type="text"]:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  background-color: #fafbfc;
+}
+
+form button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+form button[type="button"] {
+  background: linear-gradient(135deg, #4a90e2 0%, #2c5aa0 100%);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+form button[type="button"]:hover {
+  background: linear-gradient(135deg, #5ba0f2 0%, #3d6bb0 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
+}
+
+form button[type="reset"] {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+form button[type="reset"]:hover {
+  background: linear-gradient(135deg, #7b8290 0%, #5b6573 100%);
+  transform: translateY(-1px);
+}
+
+/* Table Styles (from your original theme) */
+.table-section {
+  margin-bottom: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.table-section h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #2c5aa0;
+  font-weight: 600;
+  border-bottom: 2px solid #4a90e2;
+  padding-bottom: 8px;
+}
+
+.table-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.table-section th,
+.table-section td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.table-section th {
+  background: linear-gradient(135deg, #4a90e2 0%, #2c5aa0 100%);
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+}
+
+.table-section td {
+  background-color: #ffffff;
+  color: #374151;
+}
+
+.table-section tr:nth-child(even) td {
+  background-color: #f8fafc;
+}
+
+.table-section tr:hover td {
+  background-color: #e0f2fe;
+  transition: background-color 0.2s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 20px;
+  }
+  
+  .progress-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  form button {
+    margin-bottom: 8px;
+    margin-right: 0;
+    width: 100%;
+  }
+  
+  form {
+    padding: 20px;
+  }
+}
+
+/* Professional Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4a90e2 0%, #2c5aa0 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5ba0f2 0%, #3d6bb0 100%);
+}
+
+/* Focus accessibility */
+*:focus {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+}
+
+/* Professional Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: #2c5aa0;
+  font-weight: 600;
 }
