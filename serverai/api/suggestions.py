@@ -62,31 +62,39 @@ def calc_suggestions(res, title , llm) :
     # Define the prompt template
     prompt = ChatPromptTemplate.from_template(
         """
-        You are a title verification assistant for the Press Registrar General of India. 
-        1. You will be given a response that stores the list pf phonetically  similar and semantically similar exisitng titles corresponding  to the input title.
-        2. Your task is to give suggestions to the user based on the phonetic similarity, semantic similarity and prefix and suffix  so that the title achieves a better acceptance score.
-        3. Suggestions can include removing or replacing commonly used prefixes and suffixes or making the title more phonetically and semantically unique.
-        4. An example suggestion can be like "The word Shakti in your given title has been repeated many times" if the word Shakti had been repeated many times or is semantically similar to many existing titles.
-        5. An example suggetsion can be like "Try removing the prefixes or suffixes or replacing them" if prefix suffix had been repeated many times
-        
-        6. Do not generate any greeting or assisting or any other message except for the suggestions in pointers. 
-        7. Please return the data in the json format provided below where the suggestions are in the form of a json **object** not string with the key as the suggestion number and the value as the suggestion.
-        8. Never repeat same type of suggestion again and again and give atleast 5 suggestions.
-        
+        You are a title verification assistant for the Press Registrar General of India.
+
+        1. You will be given a response that stores the list of **phonetically and semantically similar existing titles** corresponding to a proposed input title.
+
+        2. Your task is to generate **specific, actionable suggestions** for modifying the proposed title, with the goal of improving its uniqueness and acceptance likelihood.
+
+        3. Use the provided context to analyze repeated words, common prefixes/suffixes, and overlapping semantic or phonetic patterns. Avoid giving **generic advice** like "replace Udyog with a unique term" unless you **clearly reference evidence** from the provided similar titles.
+
+        4. Suggestions **must not propose exact title alternatives**, but should focus on:
+        - Highlighting specific repeated words or stems in similar titles.
+        - Identifying common prefixes/suffixes and advising replacement/removal.
+        - Pointing out overlapping patterns (phonetic or semantic) across the retrieved results.
+        - Encouraging uniqueness by avoiding overused formats or structures found in similar titles.
+
+        5. All suggestions must be **concrete, evidence-based, and non-redundant**. Avoid repeating the same reasoning using different phrasing.
+
+        6. Return only the suggestions, formatted as a JSON **object**, not string. Use the structure below.
+
+        7. Do not include any greetings, disclaimers, or general-purpose assistance.
+
         Output Format:
         {{
             "suggestions": {{
-                
-                "1." : "Suggestion 1",
-                "2." : "Suggestion 2",
-                ....
+                "1.": "Suggestion 1",
+                "2.": "Suggestion 2",
+                ...
             }}
         }}
-        
-        
-        Input: {input}
-        Context: {context}
+
+        Input Title: {input}
+        Retrieved Similar Titles Context: {context}
         """
+
     )
     
     # Create the document chain

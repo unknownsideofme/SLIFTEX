@@ -38,7 +38,7 @@ def clean_text(text):
 #fuzzy search
 from rapidfuzz import fuzz
 
-def find_phonatic_match(title, input_soundex, input_metaphone, input_nysiis, input_codex, data, threshold=60):
+def find_phonatic_match(title, input_soundex, input_metaphone, input_nysiis, input_codex, data, threshold=50):
     matches = []
 
     for _, row in data.iterrows():

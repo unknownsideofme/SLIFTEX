@@ -27,7 +27,7 @@ def clean_text(text):
     return " ".join(cleaned)  # use space to preserve word boundaries
 
 # Function to compute string similarity
-def string_score(input_text, df , threshold = 70):
+def string_score(input_text, df , threshold = 60):
     match = []
     # Clean input and title
     cleaned_input = clean_text(input_text)
@@ -52,7 +52,7 @@ def generate_ngrams(tokens, n):
     return [" ".join(tokens[i:i+n]) for i in range(len(tokens)-n+1)]
 
 # Function to compute string similarity with n-gram presence check
-def ng_score(input_text, df , threshold = 70):
+def ng_score(input_text, df , threshold = 60):
     matches = []
 
     input_tokens = clean_text(input_text)
