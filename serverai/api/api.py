@@ -12,8 +12,8 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from update import add_title
- 
-
+from phonatic_search2 import phonatic_search
+from string_sim import string_search
 # Load environment variables
 load_dotenv()
 api_key = os.getenv("GROQ_API_KEY")
@@ -137,12 +137,12 @@ def search_title(title_input: TitleInput):
         top_15_semantic = get_top_15(response_semantic)
         
         response_phonatic = phonatic_search(title)
-        top_15_phonatic = get_top_15(response_phonatic)
-        res = json.dumps( {"semantic_search": top_15_semantic, "phonatic_search": top_15_phonatic})
+        response_string = string_search(title)
+        res = json.dumps( {"semantic_search": top_15_semantic, "phonatic_search": response_phonatic, "string_search": response_string})
         res = remove_newlines(res)
         suggest = calc_suggestions(res, title, llm)
         suggest = remove_newlines(json.dumps(suggest))
-        res = json.dumps( {"semantic_search": response_semantic, "phonatic_search": response_phonatic, "suggestions": suggest})
+        res = json.dumps( {"semantic_search": response_semantic, "phonatic_search": response_phonatic, "suggestions": suggest, "string_search": response_string})
         res = remove_newlines(res)
         return  res
 

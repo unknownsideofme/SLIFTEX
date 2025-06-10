@@ -31,4 +31,4 @@ embedded_title = embed_model.embed_query(title)
 title_metaphone = doublemetaphone(title)[0]
 embedded_metaphone = embed_model.embed_query(title_metaphone)
 
-print(phonatic_search(embedded_metaphone, title, llm))
+print((embedded_metaphone, title, llm))

@@ -36,15 +36,27 @@ def clean_text(text):
 
 
 #fuzzy search
-def find_double_metaphone_matches(input_metaphoneA, input_metaphoneB, data, threshold=50):
+def find_double_metaphone_matches(title ,input_metaphoneA, input_metaphoneB, data, threshold=60):
     matches = []
     for _, row in data.iterrows():
         # Calculate similarity scores for both metaphones
+        
         score_A = fuzz.ratio(input_metaphoneA, row['metaphoneA']) if row['metaphoneA'] else 0
         score_B = fuzz.ratio(input_metaphoneB, row['metaphoneB']) if row['metaphoneB'] else 0
+        score_C = fuzz.ratio(title, row['title']) if row['title'] else 0
         
+        cons_A = (score_C+score_A)/2
+        cons_B = (score_C+score_B)/2
         # Check if either score exceeds the threshold
-        if score_A >= threshold or score_B >= threshold:
+        if cons_A >= threshold or cons_B >= threshold:
+            matches.append({
+                "title": row['title'],
+                "metaphoneA": row['metaphoneA'],
+                "metaphoneB": row['metaphoneB'],
+                "similarity_score_A": cons_A,
+                "similarity_score_B": cons_B
+            })
+        elif score_A >= threshold or score_B >= threshold:
             matches.append({
                 "title": row['title'],
                 "metaphoneA": row['metaphoneA'],
@@ -52,6 +64,16 @@ def find_double_metaphone_matches(input_metaphoneA, input_metaphoneB, data, thre
                 "similarity_score_A": score_A,
                 "similarity_score_B": score_B
             })
+        elif score_C >= threshold:
+            matches.append({
+                "title": row['title'],
+                "metaphoneA": row['metaphoneA'],
+                "metaphoneB": row['metaphoneB'],
+                "similarity_score_A": score_C,
+                "similarity_score_B": score_C
+            })
+        
+            
     
     return matches
 
@@ -66,7 +88,7 @@ def format_to_json(matches):
         reverse=True
     )
 
-    # Prepare the output dictionary
+    # Prepare the full output dictionary with all matches first
     formatted_output = {"similar titles": {}}
 
     for match in sorted_matches:
@@ -74,14 +96,19 @@ def format_to_json(matches):
             "score": max(match["similarity_score_A"], match["similarity_score_B"])
         }
 
+    # Apply the top-15 filter at the end
+    top_15_items = list(formatted_output["similar titles"].items())[:15]
+    formatted_output["similar titles"] = dict(top_15_items)
+
     # Return the formatted JSON
     return json.dumps(formatted_output, indent=4)
+
 
 
 def phonatic_search(title):
     title = clean_text(title)
     title_metaphoneA, title_metaphoneB = doublemetaphone(title) 
-    matches = find_double_metaphone_matches(title_metaphoneA, title_metaphoneB, data)
+    matches = find_double_metaphone_matches(title, title_metaphoneA, title_metaphoneB, data)
     matches = format_to_json(matches)
     return matches
 
