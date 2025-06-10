@@ -55,11 +55,13 @@ const DynamicTable = () => {
   const [tableData, setTableData] = useState({
     stringSimilar: [],
     phoneticSimilar: [],
+    semanticSimilar:[],
     suggestions: []
   });
   const [readMore, setReadMore] = useState({
     stringSimilar: false,
-    phoneticSimilar: false
+    phoneticSimilar: false,
+    semanticSimilar: false,
   });
   const [loading, setLoading] = useState(false);
   const [dataFetched, setDataFetched] = useState(false);
@@ -69,6 +71,7 @@ const DynamicTable = () => {
   const [inputDisabled, setInputDisabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showResetPopup, setShowResetPopup] = useState(false);
+  const [progresss, setProgresss] = useState(0);
   const [progress, setProgress] = useState(0);
   const [progres, setProgres] = useState(0);
   const [progre, setProgre] = useState(0); // State for progress
@@ -87,6 +90,7 @@ const DynamicTable = () => {
     setTableData({
       stringSimilar: [],
       phoneticSimilar: [],
+      semanticSimilar: [],
       suggestions: []
     });
     setDataFetched(false);
@@ -98,6 +102,12 @@ const DynamicTable = () => {
     setProgress(0);
     setProgres(0);
     setProgre(0);
+    setProgresss(0);
+    setReadMore({
+      stringSimilar: false,
+      phoneticSimilar: false,
+      semanticSimilar: false,
+    });
     setInside('');
 
   };
@@ -117,6 +127,7 @@ const DynamicTable = () => {
         setTableData({
           stringSimilar: data.semantic_search?.["similar titles"] || [],
           phoneticSimilar: data.phonatic_search?.["similar titles"] || [],
+          semanticSimilar: data.semantic_search?.["similar titles"] || [],
           suggestions: data.suggestions?.suggestions || [],
         });
 
@@ -144,12 +155,13 @@ const DynamicTable = () => {
   const calculateAndSetVerdict = (data) => {
     const stringScores = calculateScores(data.semantic_search["similar titles"]);
     const phoneticScores = calculateScores(data.phonatic_search["similar titles"]);
+    const semanticScores = calculateScores(data.semantic_search["similar titles"]);
 
     // Calculate the progress based on stringScores.max * 100
     setProgress(stringScores.max);
-    
+    setProgresss(semanticScores.max);
     setProgre(phoneticScores.max);
-    setProgres(Math.max(stringScores.max , phoneticScores.max)); 
+    setProgres(Math.max(stringScores.max , phoneticScores.max, semanticScores.max)); 
     setCalculatedVerdict(progres>=80?"Rejected":progres>70?"Pending":"Accepted");
     if ( progres <=70) {
       sendTitleToUpdateAPI(formData.title);}
@@ -206,7 +218,7 @@ const DynamicTable = () => {
     return (
       <div className="table-section">
         <h3>
-          {key === "stringSimilar" ? "String Similar Titles" : "Phonetic Similar Titles"}
+          {key === "stringSimilar" ? "String Similar Titles" : key=="phoneticSimilar"?"Phonetic Similar Titles": "Semantic Similar Titles"}
         </h3>
         <table>
           <thead>
@@ -221,7 +233,7 @@ const DynamicTable = () => {
                 <tr key={index}>
                   <td>{title}</td>
                   <td>
-                    {key === "stringSimilar" ? (item.score ).toFixed(0) : (item.score).toFixed(0)}
+                    { (item.score ).toFixed(0) }
                   </td>
                 </tr>
               ))
@@ -275,7 +287,7 @@ const DynamicTable = () => {
       {showVerdict && (
         <div className="triangle-container">
           <div className="progress-bar-wrapper">
-            <Progress progress={progress} name="Semantic-Similarity" strokeColor="#01959a" radius={70} />
+            <Progress progress={progress} name="String-Similarity" strokeColor="#01959a" radius={70} />
           </div>
           <div className="progress-bar-wrapper">
             <Progress progress={progres} name={progres==100?"Already Taken":progres>=80?"Rejected":progres>70?"Pending":"Accepted" } strokeColor="#f47a08" radius={90} />
@@ -283,7 +295,11 @@ const DynamicTable = () => {
           <div className="progress-bar-wrapper">
             <Progress progress={progre} name="Phonetic-Similarity" strokeColor="#6c757d" radius={70} />
           </div>
+          <div className="progress-bar-wrapper">
+            <Progress progress={progresss} name="Semantic-Similarity" strokeColor="#01959a" radius={70} />
+          </div>
         </div>
+
       )}
 
       {progres >= 70 && (
@@ -300,6 +316,7 @@ const DynamicTable = () => {
       <div className="tables">
         {renderTable(tableData.stringSimilar, "stringSimilar")}
         {renderTable(tableData.phoneticSimilar, "phoneticSimilar")}
+        {renderTable(tableData.semanticSimilar, "semanticSimilar")}
       </div>
 
      
