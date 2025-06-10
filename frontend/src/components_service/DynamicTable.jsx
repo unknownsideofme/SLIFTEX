@@ -2,23 +2,24 @@ import React, { useState, useEffect } from 'react';
 import './Table.css';
 import Axios from 'axios';
 import Progress from './ProgressBar';
-import { URL_FETCH,URL_POST,CACHE_EXPIRATION_TIME } from '../constant.js';
+import { URL_FETCH, URL_POST, CACHE_EXPIRATION_TIME } from '../constant.js';
 
- // 120 seconds
+// Cache function with in-memory storage instead of localStorage
+let memoryCache = {};
 
 let cache = async function getApiData(title) {
   const cacheKey = `title_cache_${encodeURIComponent(title)}`;
-  const cachedData = localStorage.getItem(cacheKey);
-  const cacheTimestamp = localStorage.getItem(`${cacheKey}_timestamp`);
+  const cachedData = memoryCache[cacheKey];
+  const cacheTimestamp = memoryCache[`${cacheKey}_timestamp`];
 
   if (cachedData && cacheTimestamp) {
     const currentTime = new Date().getTime();
     if (currentTime - cacheTimestamp < CACHE_EXPIRATION_TIME) {
       console.log('Returning cached data');
-      return JSON.parse(cachedData);
+      return cachedData;
     } else {
-      localStorage.removeItem(cacheKey);
-      localStorage.removeItem(`${cacheKey}_timestamp`);
+      delete memoryCache[cacheKey];
+      delete memoryCache[`${cacheKey}_timestamp`];
     }
   }
 
@@ -35,14 +36,12 @@ let cache = async function getApiData(title) {
       throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    if(data.error){
-      alert("Restricted Keyword is Entered")
-      setLoading(false);
-      setInputDisabled(false);
-      return;
+    if (data.error) {
+      alert("Restricted Keyword is Entered");
+      return null;
     }
-    localStorage.setItem(cacheKey, JSON.stringify(data));
-    localStorage.setItem(`${cacheKey}_timestamp`, new Date().getTime());
+    memoryCache[cacheKey] = data;
+    memoryCache[`${cacheKey}_timestamp`] = new Date().getTime();
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -55,7 +54,7 @@ const DynamicTable = () => {
   const [tableData, setTableData] = useState({
     stringSimilar: [],
     phoneticSimilar: [],
-    semanticSimilar:[],
+    semanticSimilar: [],
     suggestions: []
   });
   const [readMore, setReadMore] = useState({
@@ -71,14 +70,12 @@ const DynamicTable = () => {
   const [inputDisabled, setInputDisabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showResetPopup, setShowResetPopup] = useState(false);
-  const [progresss, setProgresss] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [progres, setProgres] = useState(0);
-  const [progre, setProgre] = useState(0); // State for progress
-  const [inside, setInside] = useState('');
-
-  const userId = localStorage.getItem("_id");
-  const username = localStorage.getItem("username");
+  
+  // Only 4 progress states needed
+  const [stringProgress, setStringProgress] = useState(0);
+  const [phoneticProgress, setPhoneticProgress] = useState(0);
+  const [semanticProgress, setSemanticProgress] = useState(0);
+  const [overallProgress, setOverallProgress] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -99,17 +96,15 @@ const DynamicTable = () => {
     setShowVerdict(false);
     setInputDisabled(false);
     setShowResetPopup(false);
-    setProgress(0);
-    setProgres(0);
-    setProgre(0);
-    setProgresss(0);
+    setStringProgress(0);
+    setPhoneticProgress(0);
+    setSemanticProgress(0);
+    setOverallProgress(0);
     setReadMore({
       stringSimilar: false,
       phoneticSimilar: false,
       semanticSimilar: false,
     });
-    setInside('');
-
   };
 
   const handleSearch = async () => {
@@ -125,7 +120,7 @@ const DynamicTable = () => {
       const data = await cache(title);
       if (data) {
         setTableData({
-          stringSimilar: data.semantic_search?.["similar titles"] || [],
+          stringSimilar: data.string_search?.["similar titles"] || [],
           phoneticSimilar: data.phonatic_search?.["similar titles"] || [],
           semanticSimilar: data.semantic_search?.["similar titles"] || [],
           suggestions: data.suggestions?.suggestions || [],
@@ -146,6 +141,7 @@ const DynamicTable = () => {
   };
 
   const calculateScores = (data) => {
+    if (!data || Object.keys(data).length === 0) return { average: 0, max: 0 };
     const scores = Object.values(data).map(item => item.score);
     const average = scores.reduce((a, b) => a + b, 0) / scores.length;
     const max = Math.max(...scores);
@@ -153,34 +149,39 @@ const DynamicTable = () => {
   };
 
   const calculateAndSetVerdict = (data) => {
-    const stringScores = calculateScores(data.semantic_search["similar titles"]);
-    const phoneticScores = calculateScores(data.phonatic_search["similar titles"]);
-    const semanticScores = calculateScores(data.semantic_search["similar titles"]);
+    const stringScores = calculateScores(data.string_search?.["similar titles"]);
+    const phoneticScores = calculateScores(data.phonatic_search?.["similar titles"]);
+    const semanticScores = calculateScores(data.semantic_search?.["similar titles"]);
 
-    // Calculate the progress based on stringScores.max * 100
-    setProgress(stringScores.max);
-    setProgresss(semanticScores.max);
-    setProgre(phoneticScores.max);
-    setProgres(Math.max(stringScores.max , phoneticScores.max, semanticScores.max)); 
-    setCalculatedVerdict(progres>=80?"Rejected":progres>70?"Pending":"Accepted");
-    if ( progres <=70) {
-      sendTitleToUpdateAPI(formData.title);}
-
-
-    // let verdict;
-    // if (progres < 65) {
-    //   verdict = 'Approved';
-    // } else if (progres <= 75) {
-    //   verdict = 'Pending';
-    // } else if (progres < 100) {
-    //   verdict = 'Rejected';
-    // } else if (progres === 100) {
-    //   verdict = 'Already Exists';
-    // }
-    // setInside(verdict);
-    // setCalculatedVerdict(verdict);
-
- 
+    // Convert to percentage and set individual progress
+    const stringPercent = Math.round(stringScores.max * 100);
+    const phoneticPercent = Math.round(phoneticScores.max * 100);
+    const semanticPercent = Math.round(semanticScores.max * 100);
+    
+    setStringProgress(stringPercent);
+    setPhoneticProgress(phoneticPercent);
+    setSemanticProgress(semanticPercent);
+    
+    // Calculate overall similarity (maximum of all three)
+    const overall = Math.max(stringPercent, phoneticPercent, semanticPercent);
+    setOverallProgress(overall);
+    
+    // Determine verdict based on overall score
+    let verdict;
+    if (overall >= 80) {
+      verdict = 'Rejected';
+    } else if (overall > 70) {
+      verdict = 'Pending';
+    } else {
+      verdict = 'Accepted';
+    }
+    
+    setCalculatedVerdict(verdict);
+    
+    // Send to API if accepted
+    if (overall <= 70) {
+      sendTitleToUpdateAPI(formData.title);
+    }
   };
 
   const sendTitleToUpdateAPI = (title) => {
@@ -200,15 +201,9 @@ const DynamicTable = () => {
       });
   };
 
- 
-
   const handleFinalVerdict = () => {
     setVerdict(calculatedVerdict);
     setShowVerdict(true);
-  };
-
-  const closePopup = () => {
-    setShowPopup(false);
   };
 
   const renderTable = (data, key) => {
@@ -218,7 +213,9 @@ const DynamicTable = () => {
     return (
       <div className="table-section">
         <h3>
-          {key === "stringSimilar" ? "String Similar Titles" : key=="phoneticSimilar"?"Phonetic Similar Titles": "Semantic Similar Titles"}
+          {key === "stringSimilar" ? "String Similar Titles" : 
+           key === "phoneticSimilar" ? "Phonetic Similar Titles" : 
+           "Semantic Similar Titles"}
         </h3>
         <table>
           <thead>
@@ -233,7 +230,7 @@ const DynamicTable = () => {
                 <tr key={index}>
                   <td>{title}</td>
                   <td>
-                    { (item.score ).toFixed(0) }
+                    {(item.score).toFixed(0)}%
                   </td>
                 </tr>
               ))
@@ -287,22 +284,26 @@ const DynamicTable = () => {
       {showVerdict && (
         <div className="triangle-container">
           <div className="progress-bar-wrapper">
-            <Progress progress={progress} name="String-Similarity" strokeColor="#01959a" radius={70} />
+            <Progress progress={stringProgress/100} name="String Similarity" strokeColor="#01959a" radius={70} />
           </div>
           <div className="progress-bar-wrapper">
-            <Progress progress={progres} name={progres==100?"Already Taken":progres>=80?"Rejected":progres>70?"Pending":"Accepted" } strokeColor="#f47a08" radius={90} />
+            <Progress progress={phoneticProgress/100} name="Phonetic Similarity" strokeColor="#6c757d" radius={70} />
           </div>
           <div className="progress-bar-wrapper">
-            <Progress progress={progre} name="Phonetic-Similarity" strokeColor="#6c757d" radius={70} />
+            <Progress progress={semanticProgress/100} name="Semantic Similarity" strokeColor="#01959a" radius={70} />
           </div>
           <div className="progress-bar-wrapper">
-            <Progress progress={progresss} name="Semantic-Similarity" strokeColor="#01959a" radius={70} />
+            <Progress 
+              progress={overallProgress/100} 
+              name={overallProgress >= 80 ? "Rejected" : overallProgress > 70 ? "Pending" : "Accepted"} 
+              strokeColor="#f47a08" 
+              radius={90} 
+            />
           </div>
         </div>
-
       )}
 
-      {progres >= 70 && (
+      {overallProgress >= 70 && (
         <div className="suggestions">
           <h3>Suggestions</h3>
           <ol>
@@ -318,8 +319,6 @@ const DynamicTable = () => {
         {renderTable(tableData.phoneticSimilar, "phoneticSimilar")}
         {renderTable(tableData.semanticSimilar, "semanticSimilar")}
       </div>
-
-     
     </div>
   );
 };
