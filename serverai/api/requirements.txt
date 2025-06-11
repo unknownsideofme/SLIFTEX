@@ -17,4 +17,7 @@ langchain-ollama
 pinecone-text
 jellyfish
 pinecone-text[splade]
+protobuf
+transformers
+sentencepiece
 

@@ -141,11 +141,30 @@ const DynamicTable = () => {
   };
 
   const calculateScores = (data) => {
-    if (!data || Object.keys(data).length === 0) return { average: 0, max: 0 };
+    if (!data || Object.keys(data).length === 0) return { average: 0, max: 0
+     };
     const scores = Object.values(data).map(item => item.score);
     const average = scores.reduce((a, b) => a + b, 0) / scores.length;
     const max = Math.max(...scores);
     return { average, max };
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission
+      if (dataFetched) {
+        handleFinalVerdict();
+      } else {
+        handleSearch();
+      }
+    }
+  };
+  const handleFormSubmit = (e) => {
+    e.preventDefault(); // Prevent page refresh
+    if (dataFetched) {
+      handleFinalVerdict();
+    } else {
+      handleSearch();
+    }
   };
 
   const calculateAndSetVerdict = (data) => {
@@ -208,7 +227,7 @@ const DynamicTable = () => {
 
   const renderTable = (data, key) => {
     const dataArray = Object.entries(data);
-    const filteredData = dataArray.filter(([_, item]) => item.score > 0);
+    const filteredData = dataArray.filter(([_, item]) => item.score > 40);
     const visibleRows = readMore[key] ? filteredData : filteredData.slice(0, 5);
   
     return (
@@ -254,7 +273,7 @@ const DynamicTable = () => {
 
   return (
     <div className="container">
-      <form>
+      <form onSubmit={handleFormSubmit}>
         <div>
           <label>Title Name</label>
           <input
@@ -264,13 +283,14 @@ const DynamicTable = () => {
             onChange={handleInputChange}
             placeholder="Enter Title"
             disabled={inputDisabled}
+            onKeyDown={handleKeyPress}
           />
         </div>
 
         <div>
           <button
             type="button"
-            onClick={dataFetched ? handleFinalVerdict : handleSearch}
+            onClick={handleFormSubmit}
             disabled={loading}
             className={dataFetched ? "final-verdict-btn" : ""}>
             {loading ? "Submitting..." : dataFetched ? "Final Verdict" : "Search"}
