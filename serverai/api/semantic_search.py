@@ -98,5 +98,3 @@ def semantic_search( title):
 
 
 #print(semantic_search("Jagran"))
-
-

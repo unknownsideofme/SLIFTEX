@@ -168,9 +168,9 @@ const DynamicTable = () => {
     
     // Determine verdict based on overall score
     let verdict;
-    if (overall >= 80) {
+    if (overall >= 60) {
       verdict = 'Rejected';
-    } else if (overall > 70) {
+    } else if (overall > 55) {
       verdict = 'Pending';
     } else {
       verdict = 'Accepted';
@@ -179,7 +179,7 @@ const DynamicTable = () => {
     setCalculatedVerdict(verdict);
     
     // Send to API if accepted
-    if (overall <= 70) {
+    if (overall <= 55) {
       sendTitleToUpdateAPI(formData.title);
     }
   };
@@ -208,7 +208,7 @@ const DynamicTable = () => {
 
   const renderTable = (data, key) => {
     const dataArray = Object.entries(data);
-    const filteredData = dataArray.filter(([_, item]) => item.score > 40);
+    const filteredData = dataArray.filter(([_, item]) => item.score > 0);
     const visibleRows = readMore[key] ? filteredData : filteredData.slice(0, 5);
   
     return (
@@ -295,7 +295,7 @@ const DynamicTable = () => {
           <div className="progress-bar-wrapper">
             <Progress 
               progress={overallProgress/100} 
-              name={overallProgress/100 >= 80 ? "Rejected" : overallProgress/100 > 70 ? "Pending" : "Accepted"} 
+              name={overallProgress/100 >= 65 ? "Rejected" : overallProgress/100 > 55 ? "Pending" : "Accepted"} 
               strokeColor="#f47a08" 
               radius={90} 
             />
@@ -303,7 +303,7 @@ const DynamicTable = () => {
         </div>
       )}
 
-      {overallProgress/100 >= 70 && (
+      {overallProgress/100 >= 55 && (
         <div className="suggestions">
           <h3>Suggestions</h3>
           <ol>

@@ -11,7 +11,10 @@ langchain-openai
 nltk
 langchain-groq
 metaphone
-pinecone-client
+pinecone
 rapidfuzz
 langchain-ollama
 pinecone-text
+jellyfish
+pinecone-text[splade]
+
