@@ -17,7 +17,7 @@ pinecone_key = os.getenv("PINECONE_API_KEY")
 # Initialize Pinecone
 pc = Pinecone(api_key=pinecone_key)
 
-index_semantic = "sliftex"
+index_semantic = "stringsearch"
 indexsemantic = pc.Index(index_semantic)
 
 #embed the query
@@ -76,7 +76,7 @@ def fuzzy_match_titles(input_text, documents):
 
 #creating pinecone retriever
 encoded_docs = BM25Encoder().load("./document.json")
-retriever = PineconeHybridSearchRetriever(index=indexsemantic, sparse_encoder=encoded_docs, embeddings=embed_model , top_k = 20 , alpha = 0.6)
+retriever = PineconeHybridSearchRetriever(index=indexsemantic, sparse_encoder=encoded_docs, embeddings=embed_model , top_k = 20 , alpha = 0.4)
 
 
 
@@ -95,5 +95,8 @@ def semantic_search( title):
      
     
     return results
+
+
+#print(semantic_search("Jagran"))
 
 

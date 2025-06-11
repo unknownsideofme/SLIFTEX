@@ -154,9 +154,9 @@ const DynamicTable = () => {
     const semanticScores = calculateScores(data.semantic_search?.["similar titles"]);
 
     // Convert to percentage and set individual progress
-    const stringPercent = Math.round(stringScores.max * 100);
-    const phoneticPercent = Math.round(phoneticScores.max * 100);
-    const semanticPercent = Math.round(semanticScores.max * 100);
+    const stringPercent = Math.round(stringScores.max *100);
+    const phoneticPercent = Math.round(phoneticScores.max *100);
+    const semanticPercent = Math.round(semanticScores.max *100);
     
     setStringProgress(stringPercent);
     setPhoneticProgress(phoneticPercent);
@@ -208,8 +208,9 @@ const DynamicTable = () => {
 
   const renderTable = (data, key) => {
     const dataArray = Object.entries(data);
-    const visibleRows = readMore[key] ? dataArray : dataArray.slice(0, 5);
-
+    const filteredData = dataArray.filter(([_, item]) => item.score > 40);
+    const visibleRows = readMore[key] ? filteredData : filteredData.slice(0, 5);
+  
     return (
       <div className="table-section">
         <h3>
@@ -229,9 +230,7 @@ const DynamicTable = () => {
               visibleRows.map(([title, item], index) => (
                 <tr key={index}>
                   <td>{title}</td>
-                  <td>
-                    {(item.score).toFixed(0)}%
-                  </td>
+                  <td>{(item.score).toFixed(0)}%</td>
                 </tr>
               ))
             ) : (
@@ -241,7 +240,7 @@ const DynamicTable = () => {
             )}
           </tbody>
         </table>
-        {dataArray.length > 5 && (
+        {filteredData.length > 5 && (
           <button
             className="read-more-btn"
             onClick={() => setReadMore((prev) => ({ ...prev, [key]: !prev[key] }))}>
@@ -251,6 +250,7 @@ const DynamicTable = () => {
       </div>
     );
   };
+  
 
   return (
     <div className="container">
@@ -295,7 +295,7 @@ const DynamicTable = () => {
           <div className="progress-bar-wrapper">
             <Progress 
               progress={overallProgress/100} 
-              name={overallProgress >= 80 ? "Rejected" : overallProgress > 70 ? "Pending" : "Accepted"} 
+              name={overallProgress/100 >= 80 ? "Rejected" : overallProgress/100 > 70 ? "Pending" : "Accepted"} 
               strokeColor="#f47a08" 
               radius={90} 
             />
@@ -303,7 +303,7 @@ const DynamicTable = () => {
         </div>
       )}
 
-      {overallProgress >= 70 && (
+      {overallProgress/100 >= 70 && (
         <div className="suggestions">
           <h3>Suggestions</h3>
           <ol>
