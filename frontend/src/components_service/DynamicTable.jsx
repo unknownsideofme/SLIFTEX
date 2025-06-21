@@ -50,7 +50,12 @@ let cache = async function getApiData(title) {
 };
 
 const DynamicTable = () => {
-  const [formData, setFormData] = useState({ title: '' });
+  const [formData, setFormData] = useState({ 
+    title: '',
+    ownerName: '',
+    language: '',
+    state: ''
+  });
   const [tableData, setTableData] = useState({
     stringSimilar: [],
     phoneticSimilar: [],
@@ -83,7 +88,12 @@ const DynamicTable = () => {
   };
 
   const handleReset = () => {
-    setFormData({ title: '' });
+    setFormData({ 
+      title: '',
+      ownerName: '',
+      language: '',
+      state: ''
+    });
     setTableData({
       stringSimilar: [],
       phoneticSimilar: [],
@@ -108,10 +118,24 @@ const DynamicTable = () => {
   };
 
   const handleSearch = async () => {
+    // Validate all required fields
+    if (!formData.ownerName.trim()) {
+      alert("Owner Name is required.");
+      return;
+    }
+    if (!formData.language.trim()) {
+      alert("Language is required.");
+      return;
+    }
+    if (!formData.state.trim()) {
+      alert("State is required.");
+      return;
+    }
     if (formData.title.length < 3) {
       alert("Title must be at least 3 characters long.");
       return;
     }
+    
     setLoading(true);
     setInputDisabled(true);
     const { title } = formData;
@@ -205,7 +229,12 @@ const DynamicTable = () => {
 
   const sendTitleToUpdateAPI = (title) => {
     Axios.post(URL_POST, 
-      { title: title }, 
+      { 
+        title: title,
+        ownerName: formData.ownerName,
+        language: formData.language,
+        state: formData.state
+      }, 
       { headers: { 'Content-Type': 'application/json' } }
     )
       .then((response) => {
@@ -241,6 +270,8 @@ const DynamicTable = () => {
           <thead>
             <tr>
               <th>Title</th>
+              <th>Language</th>
+              <th>State</th>
               <th>Similarity Score</th>
             </tr>
           </thead>
@@ -249,12 +280,14 @@ const DynamicTable = () => {
               visibleRows.map(([title, item], index) => (
                 <tr key={index}>
                   <td>{title}</td>
+                  <td>{formData.language}</td>
+                  <td>{formData.state}</td>
                   <td>{(item.score).toFixed(0)}%</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="2">No results found</td>
+                <td colSpan="4">No results found</td>
               </tr>
             )}
           </tbody>
@@ -274,6 +307,42 @@ const DynamicTable = () => {
   return (
     <div className="container">
       <form onSubmit={handleFormSubmit}>
+        <div>
+          <label>Owner Name</label>
+          <input
+            type="text"
+            name="ownerName"
+            value={formData.ownerName}
+            onChange={handleInputChange}
+            placeholder="Enter Owner Name"
+            disabled={inputDisabled}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
+        <div>
+          <label>Language</label>
+          <input
+            type="text"
+            name="language"
+            value={formData.language}
+            onChange={handleInputChange}
+            placeholder="Enter Language"
+            disabled={inputDisabled}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
+        <div>
+          <label>State</label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state}
+            onChange={handleInputChange}
+            placeholder="Enter State"
+            disabled={inputDisabled}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
         <div>
           <label>Title Name</label>
           <input
@@ -300,6 +369,26 @@ const DynamicTable = () => {
           </button>
         </div>
       </form>
+
+      {dataFetched && (
+        <div className="user-input-summary">
+          <h3>Search Details</h3>
+          <div className="input-details">
+            <div className="detail-item">
+              <strong>Owner Name:</strong> {formData.ownerName}
+            </div>
+            <div className="detail-item">
+              <strong>Language:</strong> {formData.language}
+            </div>
+            <div className="detail-item">
+              <strong>State:</strong> {formData.state}
+            </div>
+            <div className="detail-item">
+              <strong>Title:</strong> {formData.title}
+            </div>
+          </div>
+        </div>
+      )}
 
       {showVerdict && (
         <div className="triangle-container">
