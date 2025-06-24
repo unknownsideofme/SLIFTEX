@@ -15,7 +15,7 @@ import React from 'react';
             <h1 
               className='text-black font-normal mb-3' 
               style={{
-                fontSize: '1.2rem',
+                fontSize: '1.25rem',
                 lineHeight: '18px',
                 letterSpacing: '-0.08px'
               }}
