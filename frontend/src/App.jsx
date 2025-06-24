@@ -1,9 +1,10 @@
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Headers from './components_service/Headers';
 
 import Service from './Routes/Service';
-import Headers from './components_service/Headers';
+
 
 
 function App() {
@@ -11,11 +12,7 @@ function App() {
     <div className="App">
         <Headers />
         <Routes>
-        <Route path="/" element={<Service />} /> 
-         
-        
-        
-        
+        <Route path="/" element={<Service />} />
           
         </Routes>
       
