@@ -12,12 +12,13 @@ export const sigininslice = createSlice({
   name: "signin",
   initialState,
   reducers: { 
-    updateSignIn, 
-    resetSignIn
+    
+    resetSignIn,
+     updateSignIn,
   }
 });
 
-// Export the action creator
+
 export const {
     updateSignIn: updateSignInAction,
     resetSignIn: resetSignInAction
